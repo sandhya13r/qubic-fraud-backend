@@ -1,6 +1,7 @@
 # Qubic Fraud Detection Backend
 
-A lightweight, high-performance backend built for the Qubic Command Center Dashboard. It processes incoming Qubic-style transactions, performs real-time fraud scoring, stores wallet analytics, and exposes REST APIs for dashboards, analytics engines, automation workflows, and EasyConnect → n8n pipelines.
+A lightweight, high-performance backend powering the **Qubic Command Center Dashboard**.  
+It processes incoming Qubic-style transactions, performs real-time fraud scoring, stores wallet analytics, and exposes REST APIs for dashboards, automation engines, and EasyConnect → n8n workflows.
 
 ---
 
@@ -8,18 +9,18 @@ A lightweight, high-performance backend built for the Qubic Command Center Dashb
 
 ### Real-Time Risk Scoring Engine
 - Multi-rule fraud detection  
-- Amount anomalies  
-- Procedure-based risk scoring  
-- Wallet behavior heuristics  
-- Burst/timing detection  
-- Risk level classification: LOW / MEDIUM / HIGH / CRITICAL
+- Amount anomaly scoring  
+- Procedure-based risk evaluation  
+- Wallet behavior modeling  
+- Burst/timing pattern detection  
+- Risk levels: **LOW / MEDIUM / HIGH / CRITICAL**
 
 ### Wallet Intelligence Engine
-- Tracks wallet history  
-- Computes average risk  
-- Tracks total volume  
-- Latest tick/time  
-- Behavioral patterns
+- Tracks wallet transaction history  
+- Computes average risk score  
+- Monitors total volume moved  
+- Tracks last tick/time  
+- Detects behavioral patterns
 
 ### Event Analytics
 - Recent transactions  
@@ -29,27 +30,27 @@ A lightweight, high-performance backend built for the Qubic Command Center Dashb
 
 ### REST API Endpoints for Dashboards
 - Transaction feed  
-- Latest event snapshot  
+- Latest transaction snapshot  
 - Summary analytics  
 - Wallet insights
 
 ### EasyConnect / n8n Compatible
-- Accepts webhook POST  
-- Can trigger automations  
-- Works with workflows, alerts, pipelines
+- Accepts webhook POST events  
+- Fits into automation workflows  
+- Real-time event pipeline ready
 
 ---
 
 ## Architecture Overview
 
-EasyConnect → n8n → Render Backend → Qubic Command Center Dashboard
-                            ↓
-                 Risk Engine + Wallet Engine
-                            ↓
-                 Analytics + Summary + Alerts
+EasyConnect → n8n Workflow → Render Backend API → Qubic Command Center Dashboard
+↓
+Risk Engine + Wallet Intelligence Engine
+↓
+Analytics + Summary + Fraud Scoring
 
 
-This backend acts as the intelligence layer for the dashboard.
+The backend acts as the **intelligence & scoring layer** for the dashboard.
 
 ---
 
@@ -59,18 +60,20 @@ This backend acts as the intelligence layer for the dashboard.
 - Express.js  
 - CORS, BodyParser  
 - In-memory datastore  
-- Render Deployment  
-- GitHub versioning
+- Render deployment  
+- GitHub version control
 
 ---
 
 ## API Documentation
 
-### 1. POST /api/transactions
+---
+
+## 1. **POST /api/transactions**
 
 Submit a transaction to the fraud engine.
 
-Request:
+### Request
 ```json
 {
   "data": {
@@ -81,9 +84,11 @@ Request:
     "procedure": "QxAddToBidOrder"
   }
 }
+```
 
 Response:
 
+```json
 {
   "status": "ok",
   "transaction": {
@@ -98,6 +103,7 @@ Response:
     "time": "2025-01-01T11:45:00.230Z"
   }
 }
+```
 
 2. GET /api/transactions
 
@@ -105,14 +111,13 @@ Returns all transactions (latest first).
 
 3. GET /api/transactions/latest
 
-Returns the latest incoming transaction.
+Returns the most recent incoming transaction.
 
 4. GET /api/summary
 
 Provides system-wide analytics.
 
-Example:
-
+```json
 {
   "totalTransactions": 142,
   "totalVolume": 9120000,
@@ -122,53 +127,20 @@ Example:
     "MEDIUM": 42,
     "HIGH": 20,
     "CRITICAL": 12
-  },
-  "topWallets": [
-    {
-      "walletId": "0xA1B2",
-      "avgRisk": 72,
-      "txCount": 12
-    }
-  ],
-  "recent": [ ... ]
+  }
 }
+```
 
-5. GET /api/wallet/:id
+## Live Backend
 
-Returns all transactions related to a specific wallet, as well as stats.
+Base URL:  
+https://qubic-fraud-backend.onrender.com
 
-6. GET /
-
-Health check confirming backend is running.
-
-Environment Variables
-
-None required. Render provides a dynamic PORT.
-
-Local Development
-
-Install dependencies:
-
-npm install
+### API Endpoints
+GET /api/transactions  
+GET /api/transactions/latest  
+GET /api/summary  
+POST /api/transactions  
 
 
-Run server:
 
-node server.js
-
-
-Future Enhancements
-
-Replace mock endpoints with real Qubic event stream when public API becomes available
-
-Persistent DB (MongoDB/PostgreSQL)
-
-Multi-node clustering
-
-ML-based anomaly scoring
-
-API rate limiting
-
-JWT auth
-
-WebSocket live stream support
